@@ -15,7 +15,7 @@ export class IdeaToAnalysisService {
 
   // Idea to analysis prompt ID
   private readonly promptId =
-    'pmpt_6889cd12ae6081979995e96d062c79eb0e224fca80e8c5fc';
+    'pmpt_6890dd194264819782d7f68544c1b02d056516a20bac7bb6';
 
   constructor() {
     if (!process.env.OPENAI_API_KEY) {
