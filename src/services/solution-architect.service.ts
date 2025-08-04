@@ -17,7 +17,7 @@ export class SolutionArchitectService {
   // Solution architect prompt ID - you'll need to create this prompt in OpenAI
   // For now, using a placeholder - replace with actual prompt ID when available
   private readonly promptId =
-    'pmpt_6889fdcb19388190a94da7f32b83b0030328d17d342c1545';
+    'pmpt_6890dc4fd7ac81979f1077cd714754160cbebea41a3f664a';
 
   constructor() {
     if (!process.env.OPENAI_API_KEY) {
