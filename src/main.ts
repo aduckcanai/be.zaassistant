@@ -11,6 +11,9 @@ async function bootstrap() {
   });
 
   const logger = new Logger('Bootstrap');
+  
+  // Set global prefix for all routes
+  app.setGlobalPrefix('api');
 
   // Enable CORS - Cấu hình toàn diện để không bị chặn
   app.enableCors({
