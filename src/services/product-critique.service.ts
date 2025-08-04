@@ -16,7 +16,7 @@ export class ProductCritiqueService {
 
   // Product critique prompt ID
   private readonly promptId =
-    'pmpt_6889d904d70c81968dbff68a53526cd80221a20f1953bfb7';
+    'pmpt_6890dc9c8c908197bb5d26db5364ac5103924bf999aff28c';
 
   constructor() {
     if (!process.env.OPENAI_API_KEY) {
