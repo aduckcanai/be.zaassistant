@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT Integration Demo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .chat-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 600px;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .chat-header {
+        background: #4a5568;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: #f7fafc;
+      }
+
+      .message {
+        margin-bottom: 15px;
+        padding: 12px 16px;
+        border-radius: 20px;
+        max-width: 80%;
+      }
+
+      .user-message {
+        background: #4299e1;
+        color: white;
+        margin-left: auto;
+        text-align: right;
+      }
+
+      .bot-message {
+        background: #e2e8f0;
+        color: #2d3748;
+      }
+
+      .chat-input {
+        display: flex;
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .message-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 25px;
+        outline: none;
+        font-size: 16px;
+      }
+
+      .message-input:focus {
+        border-color: #4299e1;
+      }
+
+      .send-button {
+        margin-left: 10px;
+        padding: 12px 24px;
+        background: #4299e1;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+
+      .send-button:hover {
+        background: #3182ce;
+      }
+
+      .send-button:disabled {
+        background: #a0aec0;
+        cursor: not-allowed;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 10px;
+        color: #718096;
+        font-style: italic;
+      }
+
+      .error {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 10px 0;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-header">🤖 ChatGPT Integration Demo</div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+          Xin chào! Tôi là trợ lý AI. Hãy hỏi tôi bất cứ điều gì bạn muốn biết!
+          😊
+        </div>
+      </div>
+
+      <div class="loading" id="loading">Đang xử lý câu hỏi của bạn...</div>
+
+      <div class="chat-input">
+        <input
+          type="text"
+          class="message-input"
+          id="messageInput"
+          placeholder="Nhập câu hỏi của bạn..."
+          maxlength="500"
+        />
+        <button class="send-button" id="sendButton">Gửi</button>
+      </div>
+    </div>
+
+    <script>
+      const chatMessages = document.getElementById('chatMessages');
+      const messageInput = document.getElementById('messageInput');
+      const sendButton = document.getElementById('sendButton');
+      const loading = document.getElementById('loading');
+
+      let conversationId = null;
+
+      function addMessage(message, isUser = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.textContent = message;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.textContent = message;
+        chatMessages.appendChild(errorDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      function setLoading(isLoading) {
+        loading.style.display = isLoading ? 'block' : 'none';
+        sendButton.disabled = isLoading;
+        messageInput.disabled = isLoading;
+      }
+
+      async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, true);
+        messageInput.value = '';
+        setLoading(true);
+
+        try {
+          const response = await fetch('http://localhost:3000/api/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              message: message,
+              conversationId: conversationId,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          conversationId = data.conversationId;
+          addMessage(data.response);
+        } catch (error) {
+          console.error('Error:', error);
+          showError(
+            'Có lỗi xảy ra khi gửi tin nhắn. Vui lòng kiểm tra kết nối và thử lại.',
+          );
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      sendButton.addEventListener('click', sendMessage);
+      messageInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          sendMessage();
+        }
+      });
+
+      // Focus vào input khi trang load
+      messageInput.focus();
+    </script>
+  </body>
+</html>
