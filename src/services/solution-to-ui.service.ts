@@ -17,7 +17,7 @@ export class SolutionToUIService {
   // Solution to UI prompt ID - you'll need to create this prompt in OpenAI
   // For now, using a placeholder - replace with actual prompt ID when available
   private readonly promptId =
-    'pmpt_688b156a4c008197b05753b165eee2b80296fdec47313e57';
+    'pmpt_6890db9a54208193941adf9b162087f403a9f9615d6562f0';
 
   constructor() {
     if (!process.env.OPENAI_API_KEY) {
