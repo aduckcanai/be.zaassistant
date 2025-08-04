@@ -27,7 +27,7 @@ export class AssessmentCenterService {
 
   // Assessment center prompt ID - cần thay bằng prompt ID thực tế
   private readonly promptId =
-    'pmpt_6889d85c85388194b8eaa2fab3a6fa48041321b36d7af767';
+    'pmpt_6890dcd98cf88194aa429002f0f3e5a9077d078e582ae889';
 
   constructor() {
     if (!process.env.OPENAI_API_KEY) {
