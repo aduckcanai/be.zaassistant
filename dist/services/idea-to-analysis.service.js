@@ -16,7 +16,7 @@ const openai_1 = require("openai");
 let IdeaToAnalysisService = IdeaToAnalysisService_1 = class IdeaToAnalysisService {
     constructor() {
         this.logger = new common_1.Logger(IdeaToAnalysisService_1.name);
-        this.promptId = 'pmpt_6889cd12ae6081979995e96d062c79eb0e224fca80e8c5fc';
+        this.promptId = 'pmpt_6890dd194264819782d7f68544c1b02d056516a20bac7bb6';
         if (!process.env.OPENAI_API_KEY) {
             throw new Error('OPENAI_API_KEY is not configured');
         }

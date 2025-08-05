@@ -16,7 +16,7 @@ const openai_1 = require("openai");
 let SolutionArchitectService = SolutionArchitectService_1 = class SolutionArchitectService {
     constructor() {
         this.logger = new common_1.Logger(SolutionArchitectService_1.name);
-        this.promptId = 'pmpt_6889fdcb19388190a94da7f32b83b0030328d17d342c1545';
+        this.promptId = 'pmpt_6890dc4fd7ac81979f1077cd714754160cbebea41a3f664a';
         if (!process.env.OPENAI_API_KEY) {
             throw new Error('OPENAI_API_KEY is not configured');
         }

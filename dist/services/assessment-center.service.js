@@ -16,7 +16,7 @@ const openai_1 = require("openai");
 let AssessmentCenterService = AssessmentCenterService_1 = class AssessmentCenterService {
     constructor() {
         this.logger = new common_1.Logger(AssessmentCenterService_1.name);
-        this.promptId = 'pmpt_6889d85c85388194b8eaa2fab3a6fa48041321b36d7af767';
+        this.promptId = 'pmpt_6890dcd98cf88194aa429002f0f3e5a9077d078e582ae889';
         if (!process.env.OPENAI_API_KEY) {
             throw new Error('OPENAI_API_KEY is not configured');
         }

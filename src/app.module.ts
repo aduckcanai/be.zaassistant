@@ -14,6 +14,8 @@ import { SolutionToUIController } from './controllers/solution-to-ui.controller'
 import { SolutionToUIService } from './services/solution-to-ui.service';
 import { SamplePromptsController } from './controllers/sample-prompts.controller';
 import { SamplePromptsService } from './services/sample-prompts.service';
+import { FieldEditController } from './controllers/field-edit.controller';
+import { FieldEditService } from './services/field-edit.service';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { SamplePromptsService } from './services/sample-prompts.service';
     SolutionArchitectController,
     SolutionToUIController,
     SamplePromptsController,
+    FieldEditController,
   ],
   providers: [
     AppService,
@@ -39,6 +42,7 @@ import { SamplePromptsService } from './services/sample-prompts.service';
     SolutionArchitectService,
     SolutionToUIService,
     SamplePromptsService,
+    FieldEditService,
   ],
 })
 export class AppModule {}

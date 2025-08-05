@@ -23,6 +23,8 @@ const solution_to_ui_controller_1 = require("./controllers/solution-to-ui.contro
 const solution_to_ui_service_1 = require("./services/solution-to-ui.service");
 const sample_prompts_controller_1 = require("./controllers/sample-prompts.controller");
 const sample_prompts_service_1 = require("./services/sample-prompts.service");
+const field_edit_controller_1 = require("./controllers/field-edit.controller");
+const field_edit_service_1 = require("./services/field-edit.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -42,6 +44,7 @@ exports.AppModule = AppModule = __decorate([
             solution_architect_controller_1.SolutionArchitectController,
             solution_to_ui_controller_1.SolutionToUIController,
             sample_prompts_controller_1.SamplePromptsController,
+            field_edit_controller_1.FieldEditController,
         ],
         providers: [
             app_service_1.AppService,
@@ -51,6 +54,7 @@ exports.AppModule = AppModule = __decorate([
             solution_architect_service_1.SolutionArchitectService,
             solution_to_ui_service_1.SolutionToUIService,
             sample_prompts_service_1.SamplePromptsService,
+            field_edit_service_1.FieldEditService,
         ],
     })
 ], AppModule);

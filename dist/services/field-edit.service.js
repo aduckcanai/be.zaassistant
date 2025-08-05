@@ -8,15 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var ProductCritiqueService_1;
+var FieldEditService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductCritiqueService = void 0;
+exports.FieldEditService = void 0;
 const common_1 = require("@nestjs/common");
 const openai_1 = require("openai");
-let ProductCritiqueService = ProductCritiqueService_1 = class ProductCritiqueService {
+let FieldEditService = FieldEditService_1 = class FieldEditService {
     constructor() {
-        this.logger = new common_1.Logger(ProductCritiqueService_1.name);
-        this.promptId = 'pmpt_6890dc9c8c908197bb5d26db5364ac5103924bf999aff28c';
+        this.logger = new common_1.Logger(FieldEditService_1.name);
+        this.promptId = 'pmpt_6891900364688195ba5b137631ff8cf609deaf0c90a8cf47';
         if (!process.env.OPENAI_API_KEY) {
             throw new Error('OPENAI_API_KEY is not configured');
         }
@@ -24,12 +24,15 @@ let ProductCritiqueService = ProductCritiqueService_1 = class ProductCritiqueSer
             apiKey: process.env.OPENAI_API_KEY,
         });
     }
-    async createProductCritique(analysisBoard) {
+    async processFieldEdit(analysis_board, field_name, updated_field) {
         try {
-            if (!analysisBoard || !analysisBoard.product_goal) {
-                throw new Error('Invalid analysis_board structure - missing product_goal');
-            }
-            this.logger.log('Creating product critique for analysis board');
+            this.logger.log(`Processing field edit with ID: ${this.promptId}`);
+            this.logger.log(`Updating field: ${field_name}`);
+            const mergedInput = JSON.stringify({
+                analysis_board: analysis_board,
+                field_name: field_name,
+                updated_field: updated_field,
+            });
             const response = await this.openai.responses.create({
                 prompt: {
                     id: this.promptId,
@@ -40,7 +43,7 @@ let ProductCritiqueService = ProductCritiqueService_1 = class ProductCritiqueSer
                         content: [
                             {
                                 type: 'input_text',
-                                text: JSON.stringify({ analysis_board: analysisBoard }, null, 2),
+                                text: mergedInput,
                             },
                         ],
                     },
@@ -48,57 +51,51 @@ let ProductCritiqueService = ProductCritiqueService_1 = class ProductCritiqueSer
                 store: true,
             });
             const content = this.extractOutputText(response);
-            const parsed = this.tryParseJSON(content);
-            this.logger.log(`Product critique created successfully with ID: ${response.id}`);
-            if (parsed && parsed.overall_summary && parsed.critique_points) {
-                return {
-                    id: response.id,
-                    text: content,
-                    overall_summary: parsed.overall_summary,
-                    critique_points: parsed.critique_points,
-                    raw_json: parsed,
-                };
+            const parsedData = this.tryParseJSON(content);
+            this.logger.log(`Field edit processed successfully with ID: ${response.id}`);
+            let updatedValue = null;
+            if (parsedData && parsedData[field_name]) {
+                updatedValue = parsedData[field_name];
             }
-            else {
-                return {
-                    id: response.id,
-                    text: content,
-                    overall_summary: content,
-                    critique_points: [],
-                };
+            else if (parsedData) {
+                updatedValue = parsedData;
             }
+            return {
+                id: response.id,
+                field_name: field_name,
+                updated_value: updatedValue,
+                raw_content: content,
+            };
         }
         catch (error) {
-            this.logger.error('Error in createProductCritique:', error);
-            throw new Error(`Failed to create product critique: ${error.message}`);
+            this.logger.error('Error in processFieldEdit:', error);
+            throw new Error(`Failed to process field edit: ${error.message}`);
         }
     }
     async retrieveResponse(responseId) {
         try {
-            this.logger.log(`Retrieving product critique response: ${responseId}`);
+            this.logger.log(`Retrieving field edit response: ${responseId}`);
             const response = await this.openai.responses.retrieve(responseId);
             const content = this.extractOutputText(response);
-            const parsed = this.tryParseJSON(content);
-            if (parsed && parsed.overall_summary && parsed.critique_points) {
-                return {
-                    id: responseId,
-                    text: content,
-                    overall_summary: parsed.overall_summary,
-                    critique_points: parsed.critique_points,
-                    raw_json: parsed,
-                };
+            const parsedData = this.tryParseJSON(content);
+            let field_name = 'unknown';
+            let updated_value = parsedData;
+            if (parsedData && typeof parsedData === 'object') {
+                const keys = Object.keys(parsedData);
+                if (keys.length === 1) {
+                    field_name = keys[0];
+                    updated_value = parsedData[field_name];
+                }
             }
-            else {
-                return {
-                    id: responseId,
-                    text: content,
-                    overall_summary: content,
-                    critique_points: [],
-                };
-            }
+            return {
+                id: responseId,
+                field_name: field_name,
+                updated_value: updated_value,
+                raw_content: content,
+            };
         }
         catch (error) {
-            this.logger.error('Error retrieving product critique response:', error);
+            this.logger.error('Error retrieving field edit response:', error);
             throw new Error(`Failed to retrieve response: ${error.message}`);
         }
     }
@@ -136,9 +133,9 @@ let ProductCritiqueService = ProductCritiqueService_1 = class ProductCritiqueSer
         }
     }
 };
-exports.ProductCritiqueService = ProductCritiqueService;
-exports.ProductCritiqueService = ProductCritiqueService = ProductCritiqueService_1 = __decorate([
+exports.FieldEditService = FieldEditService;
+exports.FieldEditService = FieldEditService = FieldEditService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [])
-], ProductCritiqueService);
-//# sourceMappingURL=product-critique.service.js.map
+], FieldEditService);
+//# sourceMappingURL=field-edit.service.js.map
